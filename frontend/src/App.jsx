@@ -61,9 +61,9 @@ function App() {
   }
 
   return (
-    <div style={{ margin: "2rem" }}>
+    <div className="container">
       <h1>Girls</h1>
-      <form onSubmit={handleSubmit} style={{ marginBottom: "1rem" }}>
+      <form onSubmit={handleSubmit}>
         <input
           placeholder="First name"
           value={form.first_name}
@@ -93,91 +93,135 @@ function App() {
           <option>Left</option>
           <option>Rejected</option>
         </select>
-        <button type="submit">Add</button>
+        <button type="submit" className="btn">Add</button>
       </form>
 
-      <ul>
-        {girls.map((g) => (
-          <li key={g.id}>
-            {editingId === g.id ? (
-              <>
-                <input
-                  placeholder="First name"
-                  value={editForm.first_name}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, first_name: e.target.value })
-                  }
-                  required
-                />
-                <input
-                  placeholder="Last name"
-                  value={editForm.last_name}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, last_name: e.target.value })
-                  }
-                  required
-                />
-                <input
-                  type="date"
-                  value={editForm.date_of_birth}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, date_of_birth: e.target.value })
-                  }
-                  required
-                />
-                <select
-                  value={editForm.state}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, state: e.target.value })
-                  }
-                >
-                  <option>Registered</option>
-                  <option>Approved</option>
-                  <option>Member</option>
-                  <option>Leaver</option>
-                  <option>Left</option>
-                  <option>Rejected</option>
-                </select>
-                <button type="button" onClick={() => saveEdit(g.id)}>
-                  Save
-                </button>
-                <button type="button" onClick={() => setEditingId(null)}>
-                  Cancel
-                </button>
-              </>
+      <table className="girls-table">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date of Birth</th>
+            <th>State</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {girls.map((g) =>
+            editingId === g.id ? (
+              <tr key={g.id}>
+                <td>
+                  <input
+                    placeholder="First name"
+                    value={editForm.first_name}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, first_name: e.target.value })
+                    }
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    placeholder="Last name"
+                    value={editForm.last_name}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, last_name: e.target.value })
+                    }
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    type="date"
+                    value={editForm.date_of_birth}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        date_of_birth: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </td>
+                <td>
+                  <select
+                    value={editForm.state}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, state: e.target.value })
+                    }
+                  >
+                    <option>Registered</option>
+                    <option>Approved</option>
+                    <option>Member</option>
+                    <option>Leaver</option>
+                    <option>Left</option>
+                    <option>Rejected</option>
+                  </select>
+                </td>
+                <td className="actions">
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => saveEdit(g.id)}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setEditingId(null)}
+                  >
+                    Cancel
+                  </button>
+                </td>
+              </tr>
             ) : (
-              <>
-                {g.first_name} {g.last_name} — {g.date_of_birth} ({g.state})
-                <button type="button" onClick={() => viewRecord(g.id)}>
-                  Record
-                </button>
-                <button type="button" onClick={() => startEdit(g)}>
-                  Edit
-                </button>
-                <button type="button" onClick={() => deleteGirl(g.id)}>
-                  Delete
-                </button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+              <tr key={g.id}>
+                <td>{g.first_name}</td>
+                <td>{g.last_name}</td>
+                <td>{g.date_of_birth}</td>
+                <td>{g.state}</td>
+                <td className="actions">
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => viewRecord(g.id)}
+                  >
+                    Record
+                  </button>
+                  <button
+                    type="button"
+                    className="btn"
+                    onClick={() => startEdit(g)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => deleteGirl(g.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            )
+          )}
+        </tbody>
+      </table>
 
       {record && (
-        <div
-          style={{
-            marginTop: "2rem",
-            padding: "1rem",
-            border: "1px solid #ccc",
-            maxWidth: "400px",
-          }}
-        >
+        <div className="record-card">
           <h2>
             Record for {record.first_name} {record.last_name}
           </h2>
           <p>Date of Birth: {record.date_of_birth}</p>
           <p>State: {record.state}</p>
-          <button type="button" onClick={() => setRecord(null)}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setRecord(null)}
+          >
             Close
           </button>
         </div>
