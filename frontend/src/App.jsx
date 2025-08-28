@@ -6,6 +6,7 @@ function App() {
     first_name: "",
     last_name: "",
     date_of_birth: "",
+    added_to_go: "",
     state: "Member",
   };
 
@@ -14,6 +15,10 @@ function App() {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ ...empty });
   const [record, setRecord] = useState(null);
+
+  function formatDate(str) {
+    return new Date(str).toLocaleDateString("en-GB");
+  }
 
   // Load data on mount
   useEffect(() => {
@@ -38,6 +43,7 @@ function App() {
       first_name: g.first_name,
       last_name: g.last_name,
       date_of_birth: g.date_of_birth,
+      added_to_go: g.added_to_go,
       state: g.state,
     });
   }
@@ -82,6 +88,12 @@ function App() {
           onChange={(e) => setForm({ ...form, date_of_birth: e.target.value })}
           required
         />
+        <input
+          type="date"
+          value={form.added_to_go}
+          onChange={(e) => setForm({ ...form, added_to_go: e.target.value })}
+          required
+        />
         <select
           value={form.state}
           onChange={(e) => setForm({ ...form, state: e.target.value })}
@@ -102,6 +114,7 @@ function App() {
             <th>First Name</th>
             <th>Last Name</th>
             <th>Date of Birth</th>
+            <th>Added to Go</th>
             <th>State</th>
             <th>Actions</th>
           </tr>
@@ -144,6 +157,19 @@ function App() {
                   />
                 </td>
                 <td>
+                  <input
+                    type="date"
+                    value={editForm.added_to_go}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        added_to_go: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </td>
+                <td>
                   <select
                     value={editForm.state}
                     onChange={(e) =>
@@ -179,7 +205,8 @@ function App() {
               <tr key={g.id}>
                 <td>{g.first_name}</td>
                 <td>{g.last_name}</td>
-                <td>{g.date_of_birth}</td>
+                <td>{formatDate(g.date_of_birth)}</td>
+                <td>{formatDate(g.added_to_go)}</td>
                 <td>{g.state}</td>
                 <td className="actions">
                   <button
@@ -215,7 +242,8 @@ function App() {
           <h2>
             Record for {record.first_name} {record.last_name}
           </h2>
-          <p>Date of Birth: {record.date_of_birth}</p>
+          <p>Date of Birth: {formatDate(record.date_of_birth)}</p>
+          <p>Added to Go: {formatDate(record.added_to_go)}</p>
           <p>State: {record.state}</p>
           <button
             type="button"

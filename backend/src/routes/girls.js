@@ -7,7 +7,7 @@ const router = Router();
 router.get('/', async (req, res, next) => {
   try {
     const { state } = req.query;
-    const base = 'SELECT id, first_name, last_name, date_of_birth, state FROM girls';
+    const base = 'SELECT id, first_name, last_name, date_of_birth, added_to_go, state FROM girls';
     const sql = state ? `${base} WHERE state = $1 ORDER BY id` : `${base} ORDER BY id`;
     const params = state ? [state] : [];
     const { rows } = await query(sql, params);
@@ -18,7 +18,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
   try {
     const { rows } = await query(
-      'SELECT id, first_name, last_name, date_of_birth, state FROM girls WHERE id = $1',
+      'SELECT id, first_name, last_name, date_of_birth, added_to_go, state FROM girls WHERE id = $1',
       [req.params.id]
     );
     if (!rows.length) return res.status(404).json({ error: 'Not found' });
@@ -28,12 +28,12 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const { first_name, last_name, date_of_birth, state } = req.body;
+    const { first_name, last_name, date_of_birth, added_to_go, state } = req.body;
     const { rows } = await query(
-      `INSERT INTO girls (first_name, last_name, date_of_birth, state)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, first_name, last_name, date_of_birth, state`,
-      [first_name, last_name, date_of_birth, state]
+      `INSERT INTO girls (first_name, last_name, date_of_birth, added_to_go, state)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, first_name, last_name, date_of_birth, added_to_go, state`,
+      [first_name, last_name, date_of_birth, added_to_go, state]
     );
     res.status(201).json(rows[0]);
   } catch (e) { next(e); }
@@ -41,7 +41,7 @@ router.post('/', async (req, res, next) => {
 
 router.patch('/:id', async (req, res, next) => {
   try {
-    const fields = ['first_name', 'last_name', 'date_of_birth', 'state'];
+    const fields = ['first_name', 'last_name', 'date_of_birth', 'added_to_go', 'state'];
     const updates = [];
     const values = [];
     fields.forEach((f) => {
@@ -55,7 +55,7 @@ router.patch('/:id', async (req, res, next) => {
 
     const { rows } = await query(
       `UPDATE girls SET ${updates.join(', ')} WHERE id = $${values.length}
-       RETURNING id, first_name, last_name, date_of_birth, state`,
+       RETURNING id, first_name, last_name, date_of_birth, added_to_go, state`,
       values
     );
     if (!rows.length) return res.status(404).json({ error: 'Not found' });
